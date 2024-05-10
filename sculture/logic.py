@@ -18,11 +18,20 @@ def get_current_user(apiKey: str = Header(...), userId: int = Header(...)):
 
 
 def create_user(user: User):
-    user = add_user(user)
+    user = add_user({
+        **user.dict(),
+        "active": True,
+    })
     return user
 
 
 def create_post(post: Post, current_user: User):
+    new_post = {
+        **post.dict(),
+        "authorId": current_user.userId,
+        "created": datetime.utcnow(),
+        "active": True,
+    }
     new_post = add_post(post, current_user)
     return new_post
 

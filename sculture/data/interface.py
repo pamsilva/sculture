@@ -5,7 +5,7 @@ from sculture.data.schemas import Post as SPost
 from sculture.data.schemas import Feedback as SFeedback
 
 def add_user(user: User):
-    user = SUser(**user.dict())
+    user = SUser(**user)
     
     db = get_db()
     db.add(user)
