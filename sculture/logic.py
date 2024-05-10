@@ -1,7 +1,8 @@
+from datetime import datetime
 from fastapi import Header, FastAPI, HTTPException, Depends
 
-from sculture.schemas import User, Post
-from sculture.data.interface import add_user, add_post, add_feedback, get_user
+from sculture.schemas import User, NewPost, Feedback, NewFeedback, NewUser
+from sculture.data.interface import add_user, add_post, add_feedback, get_user, get_post, get_latest_n_posts as db_get_latest_n_posts
 
 fake_users_db = {}
 
@@ -17,7 +18,7 @@ def get_current_user(apiKey: str = Header(...), userId: int = Header(...)):
     return user
 
 
-def create_user(user: User):
+def create_user(user: NewUser):
     user = add_user({
         **user.dict(),
         "active": True,
@@ -25,25 +26,24 @@ def create_user(user: User):
     return user
 
 
-def create_post(post: Post, current_user: User):
+def create_post(post: NewPost, current_user: User):
     new_post = {
         **post.dict(),
         "authorId": current_user.userId,
         "created": datetime.utcnow(),
         "active": True,
     }
-    new_post = add_post(post, current_user)
+    new_post = add_post(new_post, current_user)
     return new_post
 
 
 def get_latest_n_posts(n: int):
-    # get latest n posts
-    return []
+    return db_get_latest_n_posts(n)
 
 
-def feedback_post(post: Post, positive: bool, current_user: User):
-    new_feedback = {
-        "postId": post.postId,
-        "positive": positive
-    }
-    return add_feedback(new_feedback, current_user)
+def feedback_post(feedback: NewFeedback, current_user: User):
+    post = get_post(feedback.postId)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    
+    return add_feedback(feedback.dict(), current_user)

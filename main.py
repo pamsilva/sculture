@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from typing import List
 
-from sculture.schemas import User, Post, Feedback
+from sculture.schemas import User, Post, Feedback, NewFeedback, NewUser, NewPost
 from sculture.logic import create_user, create_post, get_latest_n_posts, feedback_post, get_current_user
 
 app = FastAPI()
@@ -10,12 +10,12 @@ app = FastAPI()
 
 # Endpoint to create a user
 @app.post("/users/", response_model=User)
-async def create_user_endpoint(user: User):
+async def create_user_endpoint(user: NewUser):
     return create_user(user)
 
 
 @app.post("/posts/", response_model=Post)
-async def create_post(post: Post, current_user: User = Depends(get_current_user)):
+async def create_new_post(post: NewPost, current_user: User = Depends(get_current_user)):
     return create_post(post, current_user)
 
 
@@ -26,5 +26,5 @@ async def latest_posts():
 
 
 @app.post("/feedback/", response_model=Feedback)
-async def add_feedback(post: Post, positive: bool, current_user: User = Depends(get_current_user)):
-    feedback_post(post, positive, current_user)
+async def add_feedback(feedback: NewFeedback, current_user: User = Depends(get_current_user)):
+    return feedback_post(feedback, current_user)

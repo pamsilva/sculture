@@ -2,16 +2,34 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class User(BaseModel):
+class NewUser(BaseModel):
     name: str
     apiKey: str
 
+    
+class User(NewUser):
+    userId: int
+    active: bool
 
-class Post(BaseModel):
+    
+class NewPost(BaseModel):
     title: str
     body: str
 
-
-class Feedback(BaseModel):
+    
+class Post(NewPost):
     postId: int
+    authorId: int
+    created: datetime
+    active: bool
+
+
+class NewFeedback(BaseModel):
+    postId: int
+    positive: bool
+
+
+class Feedback(NewFeedback):
+    feedbackId: int
+    postId: intdata
     positive: bool
