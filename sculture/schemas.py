@@ -31,5 +31,5 @@ class NewFeedback(BaseModel):
 
 class Feedback(NewFeedback):
     feedbackId: int
-    postId: intdata
+    postId: int
     positive: bool
