@@ -101,7 +101,7 @@ def test_feedback_post():
 
 
 def test_fetch_posts():
-    # TODO: there has to be a better way of setting up the test scenario
+    # TODO: there has to be a  way of setting up the test scenario
     rand_api_key = str(random.randint(0, 1000000))
     response = client.post(
         "/users/", json={
