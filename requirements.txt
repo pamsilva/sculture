@@ -1,0 +1,9 @@
+python-dotenv
+pytest
+fastapi
+uvicorn
+passlib
+bcrypt
+sqlalchemy
+psycopg2
+alembic
